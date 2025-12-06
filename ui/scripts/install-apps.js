@@ -37,7 +37,15 @@ function installWorkspace(dir) {
   const result = spawnSync('npm', ['install'], {
     cwd: dir,
     stdio: 'inherit',
-    env: { ...process.env, SKIP_WORKSPACE_INSTALL: '1' },
+    env: {
+      ...process.env,
+      SKIP_WORKSPACE_INSTALL: '1',
+      // Ensure devDependencies are installed so local build steps (e.g. prepare)
+      // have the tooling they need, even if the root install is running with
+      // NODE_ENV=production.
+      NODE_ENV: process.env.NODE_ENV ?? 'development',
+      npm_config_production: 'false',
+    },
   });
 
   if (result.status !== 0) {
