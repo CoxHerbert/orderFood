@@ -22,26 +22,35 @@ function parseNpmVersion() {
   return null;
 }
 
-const npmVersion = parseNpmVersion();
-const npmMajor = Array.isArray(npmVersion) ? npmVersion[0] : null;
+function assertWorkspaceSupport() {
+  const npmVersion = parseNpmVersion();
+  const npmMajor = Array.isArray(npmVersion) ? npmVersion[0] : null;
 
-if (!npmMajor || npmMajor < MIN_NPM_MAJOR) {
-  console.error(
-    `This workspace requires npm v${MIN_NPM_MAJOR}+ to install workspace dependencies. ` +
-      'Please upgrade npm (e.g. `npm install -g npm@latest`) and re-run `npm install`.'
-  );
-  process.exit(1);
+  if (!npmMajor || npmMajor < MIN_NPM_MAJOR) {
+    console.error(
+      `This workspace requires npm v${MIN_NPM_MAJOR}+ to install workspace dependencies. ` +
+        'Please upgrade npm (e.g. `npm install -g npm@latest`) and re-run `npm install`.'
+    );
+    process.exit(1);
+  }
 }
 
-const result = spawnSync(
-  'npm',
-  ['install', '--workspaces', '--include-workspace-root=false', '--ignore-scripts'],
-  {
-    stdio: 'inherit',
-    env: { ...process.env, SKIP_WORKSPACE_INSTALL: '1' },
-  }
-);
+assertWorkspaceSupport();
+
+const installArgs = [
+  'install',
+  '--workspaces',
+  '--include-workspace-root=false',
+  '--install-strategy=linked',
+];
+
+const result = spawnSync('npm', installArgs, {
+  stdio: 'inherit',
+  env: { ...process.env, SKIP_WORKSPACE_INSTALL: '1' },
+});
 
 if (result.status !== 0) {
+  console.error('\nWorkspace install failed. If you see "Unsupported URL Type \"workspace:\"", ' +
+    'make sure you run `npm install` from the repo root (ui/) with npm v7+ so workspace links are supported.');
   process.exit(result.status ?? 1);
 }
