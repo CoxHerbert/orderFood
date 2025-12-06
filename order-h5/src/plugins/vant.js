@@ -6,9 +6,9 @@ import {
   Card,
   Cell,
   CellGroup,
+  Dialog,
   Empty,
   Icon,
-  List,
   Loading,
   NavBar,
   Sidebar,
@@ -28,9 +28,9 @@ const components = [
   Card,
   Cell,
   CellGroup,
+  Dialog,
   Empty,
   Icon,
-  List,
   Loading,
   NavBar,
   Sidebar,
@@ -38,12 +38,10 @@ const components = [
   Stepper,
   Tab,
   Tabs,
-  Tag
+  Tag,
+  Toast
 ]
 
 export default function setupVant(app) {
-  components.forEach((component) => {
-    app.use(component)
-  })
-  app.use(Toast)
+  components.forEach((c) => app.use(c))
 }

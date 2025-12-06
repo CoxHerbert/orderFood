@@ -13,12 +13,7 @@ NProgress.configure({ showSpinner: false })
 
 const whiteList = [
   '/login',
-  '/register',
-  '/menu',
-  '/order/confirm',
-  '/order/**',
-  '/merchant/orders',
-  '/merchant/orders/**'
+  '/register'
 ]
 
 const isWhiteList = (path) => {

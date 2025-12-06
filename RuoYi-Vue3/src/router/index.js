@@ -48,31 +48,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/menu',
-    component: () => import('@/views/order/user/Menu.vue'),
-    hidden: true
-  },
-  {
-    path: '/order/confirm',
-    component: () => import('@/views/order/user/OrderConfirm.vue'),
-    hidden: true
-  },
-  {
-    path: '/order/:id',
-    component: () => import('@/views/order/user/OrderDetail.vue'),
-    hidden: true
-  },
-  {
-    path: '/merchant/orders',
-    component: () => import('@/views/order/merchant/MerchantOrders.vue'),
-    hidden: true
-  },
-  {
-    path: '/merchant/orders/:id',
-    component: () => import('@/views/order/merchant/MerchantOrderDetail.vue'),
-    hidden: true
-  },
-  {
     path: "/:pathMatch(.*)*",
     component: () => import('@/views/error/404'),
     hidden: true

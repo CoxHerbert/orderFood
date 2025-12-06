@@ -8,7 +8,6 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 import locale from 'element-plus/es/locale/lang/zh-cn'
 
 import '@/assets/styles/index.scss' // global css
-import 'vant/lib/index.css'
 
 import App from './App'
 import store from './store'
@@ -23,7 +22,6 @@ import { download } from '@/utils/request'
 import 'virtual:svg-icons-register'
 import SvgIcon from '@/components/SvgIcon'
 import elementIcons from '@/components/SvgIcon/svgicon'
-import setupVant from '@/plugins/vant'
 
 import './permission' // permission control
 
@@ -72,7 +70,6 @@ app.use(router)
 app.use(store)
 app.use(plugins)
 app.use(elementIcons)
-setupVant(app)
 app.component('svg-icon', SvgIcon)
 
 directive(app)
