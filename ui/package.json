@@ -6,8 +6,8 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "npm run install:apps",
-    "install:apps": "npm --prefix apps/admin-pc install && npm --prefix apps/merchant-h5 install && npm --prefix apps/user-h5 install",
+    "postinstall": "node scripts/install-apps.js",
+    "install:apps": "node scripts/install-apps.js",
     "dev:user": "npm run -w user-h5 dev",
     "dev:merchant": "npm run -w merchant-h5 dev",
     "dev:admin": "npm run -w admin-pc dev",
