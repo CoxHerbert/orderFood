@@ -1,56 +1,58 @@
+const fs = require('fs');
+const path = require('path');
 const { spawnSync } = require('child_process');
 
-const MIN_NPM_MAJOR = 7;
-
-// Avoid infinite recursion if this script is triggered from nested npm installs.
+// Avoid infinite recursion if any nested npm install triggers this script.
 if (process.env.SKIP_WORKSPACE_INSTALL === '1') {
   process.exit(0);
 }
 
-function parseNpmVersion() {
-  const userAgent = process.env.npm_config_user_agent;
-  const match = userAgent && userAgent.match(/npm\/(\d+)\.(\d+)\.(\d+)/);
-  if (match) {
-    return match.slice(1, 4).map((part) => Number(part));
+const ROOT = path.resolve(__dirname, '..');
+
+function findWorkspacePackages() {
+  const groups = ['packages', 'apps'];
+  const workspaces = [];
+
+  for (const group of groups) {
+    const groupPath = path.join(ROOT, group);
+    if (!fs.existsSync(groupPath)) continue;
+
+    for (const entry of fs.readdirSync(groupPath, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const pkgDir = path.join(groupPath, entry.name);
+      const pkgJson = path.join(pkgDir, 'package.json');
+      if (fs.existsSync(pkgJson)) {
+        workspaces.push(pkgDir);
+      }
+    }
   }
 
-  const result = spawnSync('npm', ['--version'], { encoding: 'utf8' });
-  if (result.status === 0 && typeof result.stdout === 'string') {
-    return result.stdout.trim().split('.').map((part) => Number(part));
-  }
-
-  return null;
+  return workspaces;
 }
 
-function assertWorkspaceSupport() {
-  const npmVersion = parseNpmVersion();
-  const npmMajor = Array.isArray(npmVersion) ? npmVersion[0] : null;
+function installWorkspace(dir) {
+  const relativeDir = path.relative(ROOT, dir);
+  console.log(`\nInstalling ${relativeDir}...`);
 
-  if (!npmMajor || npmMajor < MIN_NPM_MAJOR) {
-    console.error(
-      `This workspace requires npm v${MIN_NPM_MAJOR}+ to install workspace dependencies. ` +
-        'Please upgrade npm (e.g. `npm install -g npm@latest`) and re-run `npm install`.'
-    );
-    process.exit(1);
+  const result = spawnSync('npm', ['install'], {
+    cwd: dir,
+    stdio: 'inherit',
+    env: { ...process.env, SKIP_WORKSPACE_INSTALL: '1' },
+  });
+
+  if (result.status !== 0) {
+    console.error(`\nFailed to install dependencies in ${relativeDir}.`);
+    process.exit(result.status ?? 1);
   }
 }
 
-assertWorkspaceSupport();
+const workspaceDirs = findWorkspacePackages();
 
-const installArgs = [
-  'install',
-  '--workspaces',
-  '--include-workspace-root=false',
-  '--install-strategy=linked',
-];
+if (workspaceDirs.length === 0) {
+  console.log('No workspace packages found under apps/ or packages/.');
+  process.exit(0);
+}
 
-const result = spawnSync('npm', installArgs, {
-  stdio: 'inherit',
-  env: { ...process.env, SKIP_WORKSPACE_INSTALL: '1' },
-});
-
-if (result.status !== 0) {
-  console.error('\nWorkspace install failed. If you see "Unsupported URL Type \"workspace:\"", ' +
-    'make sure you run `npm install` from the repo root (ui/) with npm v7+ so workspace links are supported.');
-  process.exit(result.status ?? 1);
+for (const dir of workspaceDirs) {
+  installWorkspace(dir);
 }
