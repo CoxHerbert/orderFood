@@ -10,7 +10,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@shared/utils": "workspace:*",
+    "@shared/utils": "file:../../packages/utils",
     "vue": "^3.5.16"
   },
   "devDependencies": {
