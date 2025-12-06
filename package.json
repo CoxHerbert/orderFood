@@ -1,0 +1,22 @@
+{
+  "name": "multi-client-frontend",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:user": "npm run -w user-h5 dev",
+    "dev:merchant": "npm run -w merchant-h5 dev",
+    "dev:admin": "npm run -w admin-pc dev",
+    "build:user": "npm run -w user-h5 build",
+    "build:merchant": "npm run -w merchant-h5 build",
+    "build:admin": "npm run -w admin-pc build",
+    "build:all": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  }
+}

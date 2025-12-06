@@ -1,5 +1,5 @@
 {
-  "name": "ruoyi",
+  "name": "admin-pc",
   "version": "3.9.0",
   "description": "若依管理系统",
   "author": "若依",
@@ -7,9 +7,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build": "vite build",
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "echo \"lint admin-pc\"",
+    "typecheck": "echo \"typecheck admin-pc\""
   },
   "repository": {
     "type": "git",
@@ -17,6 +20,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "2.3.1",
+    "@shared/utils": "workspace:*",
     "@vueup/vue-quill": "1.2.0",
     "@vueuse/core": "13.3.0",
     "axios": "1.9.0",
