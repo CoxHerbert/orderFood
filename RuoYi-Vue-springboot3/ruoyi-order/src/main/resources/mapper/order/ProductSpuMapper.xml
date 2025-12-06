@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.order.mapper.ProductSpuMapper">
+
+    <resultMap type="ProductSpu" id="ProductSpuResult">
+        <id property="id" column="id" />
+        <result property="storeId" column="store_id" />
+        <result property="categoryId" column="category_id" />
+        <result property="name" column="name" />
+        <result property="description" column="description" />
+        <result property="imageUrl" column="image_url" />
+        <result property="onSale" column="on_sale" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <select id="selectProductSpuById" resultMap="ProductSpuResult">
+        select id, store_id, category_id, name, description, image_url, on_sale, create_time, update_time, remark
+        from product_spu
+        where id = #{id}
+    </select>
+
+    <select id="selectOnSaleByCategoryId" resultMap="ProductSpuResult">
+        select id, store_id, category_id, name, description, image_url, on_sale, create_time, update_time, remark
+        from product_spu
+        where category_id = #{categoryId} and on_sale = 1
+        order by id asc
+    </select>
+</mapper>

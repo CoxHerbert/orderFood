@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.order.mapper.StoreTableMapper">
+
+    <resultMap type="StoreTable" id="StoreTableResult">
+        <id property="id" column="id" />
+        <result property="storeId" column="store_id" />
+        <result property="tableCode" column="table_code" />
+        <result property="tableName" column="table_name" />
+        <result property="qrcodeContent" column="qrcode_content" />
+        <result property="enabled" column="enabled" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <select id="selectStoreTableById" resultMap="StoreTableResult">
+        select id, store_id, table_code, table_name, qrcode_content, enabled, create_time, update_time, remark
+        from store_table
+        where id = #{id}
+    </select>
+</mapper>
